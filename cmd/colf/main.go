@@ -19,6 +19,8 @@ var (
 	format  = flag.Bool("f", false, "Normalize the format of all schema input on the fly.")
 	verbose = flag.Bool("v", false, "Enable verbose reporting to "+italic+"standard error"+clear+".")
 
+	handler = flag.Bool("handler", false, "gen handler")
+
 	sizeMax = flag.String("s", "16 * 1024 * 1024", "Set the default upper limit for serial byte sizes. The\n`expression` is applied to the target language under the name\nColferSizeMax.")
 	listMax = flag.String("l", "64 * 1024", "Set the default upper limit for the number of elements in a\nlist. The `expression` is applied to the target language under\nthe name ColferListMax.")
 

@@ -1,0 +1,149 @@
+package {{.NameNative}}
+
+import(
+    "github.com/tidwall/buntdb"
+)
+
+func NewRepo(path_db string) (*Repo, error){
+    var err error
+    r := new(Repo)
+    r.db,err = buntdb.Open(path_db)
+    if err != nil{
+        return nil, err
+    }
+
+    {{range .Structs}}
+    err = r.db.CreateIndex("{{.NameNative}}_list", "{{.NameNative}}_list:*", buntdb.IndexString)
+	if err != nil {
+		return nil, err
+	}
+    {{end}}
+
+    return r, nil
+}
+
+type Repo struct{
+    db *buntdb.DB
+}
+
+{{range .Structs}}
+func (r *Repo) Get{{.NameNative}}(key string) (*{{.NameNative}}, error) {
+	var err error
+	s := new({{.NameNative}})
+
+	err = r.db.View(func(tx *buntdb.Tx) error {
+		key_db := "{{.NameNative}}_list:" + key
+		value, exists, err := get(tx, key_db)
+		if err != nil {
+			return err
+		}
+		if exists {
+			err = s.UnmarshalBinary([]byte(value))
+			if err != nil {
+				return err
+			}
+		}
+		return buntdb.ErrNotFound
+	})
+    s.Key=key
+	return s, err
+}
+
+func (r *Repo) GetList{{.NameNative}}(ascend bool) ([]*{{.NameNative}}, error) {
+	var err error
+	var err_unmarshal error
+	list := make([]*{{.NameNative}}, 0)
+
+	fn := func(key, value string) bool {
+		s := new({{.NameNative}})
+		err_unmarshal = s.UnmarshalBinary([]byte(value))
+		if err_unmarshal != nil {
+			return false
+		}
+
+		for i := len(key) - 1; i >= 0; i-- {
+			if key[i] == ':' {
+				key = key[i+1:]
+				break
+			}
+		}
+
+		s.Key = key
+		list = append(list, s)
+		return true
+	}
+
+	err = r.db.View(func(tx *buntdb.Tx) error {
+		if ascend {
+			err = tx.Ascend("{{.NameNative}}_list", fn)
+		} else {
+			err = tx.Descend("{{.NameNative}}_list", fn)
+		}
+		if err != nil {
+			return err
+		}
+		if err_unmarshal != nil {
+			return err_unmarshal
+		}
+		return nil
+	})
+	return list, err
+}
+
+func (r *Repo) Update{{.NameNative}}(key string, fn_update func(channel *{{.NameNative}}, exists bool) (do_update bool)) error {
+	return r.db.Update(func(tx *buntdb.Tx) error {
+		key_db := "{{.NameNative}}_list:" + key
+		value, exists, err := get(tx, key_db)
+		if err != nil {
+			return err
+		}
+		s := new({{.NameNative}})
+		if exists {
+			err = s.UnmarshalBinary([]byte(value))
+			if err != nil {
+				return err
+			}
+		}
+        s.Key = key
+		do_update := fn_update(s, exists)
+		if !do_update {
+			return nil
+		}
+
+        if exists && s.Key != key {
+            _, err = tx.Delete(key_db)
+            if err != nil {
+			    return err
+		    }
+            key_db = "{{.NameNative}}_list:" + s.Key
+        }
+
+		b, err := s.MarshalBinary()
+		if err != nil {
+			return err
+		}
+
+		_, _, err = tx.Set(key_db, string(b), nil)
+		if err != nil {
+			return err
+		}
+		return nil
+	})
+}
+{{end}}
+
+
+func get(tx *buntdb.Tx, key_db string) (value string, exists bool, err error) {
+
+	value, err = tx.Get(key_db)
+
+	if err != nil {
+		if err == buntdb.ErrNotFound {
+			return "", false, nil
+		}
+		return
+	}
+
+	exists = true
+	return
+}

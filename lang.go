@@ -1,8 +1,8 @@
 package colfer
 
 import (
-	_ "embed"
 	"bytes"
+	_ "embed"
 	"io/ioutil"
 	"os"
 	"path/filepath"
@@ -189,6 +189,9 @@ func GenerateGo(basedir string, packages Packages) error {
 	template.Must(t.New("unmarshal-field").Parse(goUnmarshalField))
 	template.Must(t.New("unmarshal-varint").Parse(goUnmarshalVarint))
 
+	t_handler := template.New("go-handler")
+	template.Must(t_handler.Parse(goHandler))
+
 	modDir, modPkg, err := goMod(basedir)
 	if err != nil {
 		return err
@@ -248,12 +251,38 @@ func GenerateGo(basedir string, packages Packages) error {
 		if _, err := FormatFile(path); err != nil {
 			return err
 		}
+
+		buf.Reset()
+		if err := t_handler.Execute(&buf, p); err != nil {
+			return err
+		}
+
+		path = filepath.Join(basedir, p.Name)
+		if modPkg != "" && strings.HasPrefix(p.Name, modPkg+"/") {
+			path = filepath.Join(modDir, p.Name[len(modPkg):])
+		}
+		if err := os.MkdirAll(path, 0777); err != nil {
+			return err
+		}
+
+		path = filepath.Join(path, "ColferBuntDB.go")
+		if err := ioutil.WriteFile(path, buf.Bytes(), 0666); err != nil {
+			return err
+		}
+
+		if _, err := FormatFile(path); err != nil {
+			return err
+		}
+
 	}
 	return nil
 }
 
 //go:embed template/go.txt
 var goCode string
+
+//go:embed template/go-handler.txt
+var goHandler string
 
 //go:embed template/go-marshal-field.txt
 var goMarshalField string
