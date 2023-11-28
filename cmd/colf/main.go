@@ -10,7 +10,7 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/pascaldekloe/colfer"
+	"github.com/frbrno/colfer"
 )
 
 var (
@@ -289,7 +289,7 @@ func printManual() {
 		"\t\t" + name + " -p com.example.model -x com.example.io.IOBean Java\n"
 
 	bugsSection := bold + "BUGS" + clear + "\n" +
-		"\tReport bugs at <https://github.com/pascaldekloe/colfer/issues>.\n\n" +
+		"\tReport bugs at <https://github.com/frbrno/colfer/issues>.\n\n" +
 		"\tText validation is not part of the marshalling and unmarshalling\n" +
 		"\tprocess. C and Go just pass any malformed UTF-8 characters. Java\n" +
 		"\tand JavaScript replace unmappable content with the '?' character\n" +

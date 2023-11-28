@@ -13,7 +13,7 @@
 
 <name>Colfer Maven Plugin</name>
 <description>Makes schema compilation part of the build.</description>
-<url>https://github.com/pascaldekloe/colfer</url>
+<url>https://github.com/frbrno/colfer</url>
 
 <licenses>
 <license>
@@ -33,13 +33,13 @@
 
 <issueManagement>
 <system>GitHub</system>
-<url>https://github.com/pascaldekloe/colfer/issues</url>
+<url>https://github.com/frbrno/colfer/issues</url>
 </issueManagement>
 
 <scm>
-<connection>scm:git:git://github.com/pascaldekloe/colfer.git</connection>
+<connection>scm:git:git://github.com/frbrno/colfer.git</connection>
 <developerConnection>scm:git:ssh://github.com:pascaldekloe/colfer.git</developerConnection>
-<url>https://github.com/pascaldekloe/colfer/tree/master</url>
+<url>https://github.com/frbrno/colfer/tree/master</url>
 </scm>
 
 <properties>

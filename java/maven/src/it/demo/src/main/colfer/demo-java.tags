@@ -1,6 +1,6 @@
 demo.course		@javax.xml.bind.annotation.XmlRootElement(
 demo.course			name="golf-course",
-demo.course			namespace="https://github.com/pascaldekloe/colfer/java/maven/src/it/demo#ns"
+demo.course			namespace="https://github.com/frbrno/colfer/java/maven/src/it/demo#ns"
 demo.course		)
 demo.course.ID		@javax.validation.constraints.Min(1)
 demo.course.ID		@javax.validation.constraints.Max(0xffffffffL)

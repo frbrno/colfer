@@ -1,6 +1,6 @@
 # Colfer
 
-Colfer is a binary serialization [format](https://github.com/pascaldekloe/colfer/wiki/Spec)
+Colfer is a binary serialization [format](https://github.com/frbrno/colfer/wiki/Spec)
 optimized for speed and size.
 
 The project's compiler `colf(1)` generates source code from schema definitions
@@ -10,7 +10,7 @@ This is free and unencumbered software released into the
 [public domain](http://creativecommons.org/publicdomain/zero/1.0).
 The format is inspired by Proto**col** Buf**fer**s.
 
-[![CI](https://github.com/pascaldekloe/colfer/actions/workflows/ci.yml/badge.svg)](https://github.com/pascaldekloe/colfer/actions/workflows/ci.yml)
+[![CI](https://github.com/frbrno/colfer/actions/workflows/ci.yml/badge.svg)](https://github.com/frbrno/colfer/actions/workflows/ci.yml)
 
 
 #### Language Support
@@ -36,13 +36,13 @@ The format is inspired by Proto**col** Buf**fer**s.
 #### TODO's
 
 * Rust and Python support
-* Protocol [revision](https://github.com/pascaldekloe/colfer/commits/v2)
+* Protocol [revision](https://github.com/frbrno/colfer/commits/v2)
 
 
 ## Use
 
-Download a [prebuilt compiler](https://github.com/pascaldekloe/colfer/releases)
-or run `go get -u github.com/pascaldekloe/colfer/cmd/colf` to make one yourself.
+Download a [prebuilt compiler](https://github.com/frbrno/colfer/releases)
+or run `go get -u github.com/frbrno/colfer/cmd/colf` to make one yourself.
 Homebrew users can also `brew install colfer`.
 
 The command prints its own manual when invoked without arguments.
@@ -130,7 +130,7 @@ EXAMPLES
 		colf -p com.example.model -x com.example.io.IOBean Java
 
 BUGS
-	Report bugs at <https://github.com/pascaldekloe/colfer/issues>.
+	Report bugs at <https://github.com/frbrno/colfer/issues>.
 
 	Text validation is not part of the marshalling and unmarshalling
 	process. C and Go just pass any malformed UTF-8 characters. Java
@@ -144,7 +144,7 @@ SEE ALSO
 It is recommended to commit the generated source code into the respective
 version control to preserve build consistency and minimise the need for compiler
 installations. Alternatively, you may use the
-[Maven plugin](https://github.com/pascaldekloe/colfer/wiki/Java#maven).
+[Maven plugin](https://github.com/frbrno/colfer/wiki/Java#maven).
 
 ```xml
 <plugin>
@@ -247,5 +247,5 @@ seen as the schema version.
 
 Colfer aims to be the fastest and the smallest format without compromising on
 reliability. See the
-[benchmark wiki](https://github.com/pascaldekloe/colfer/wiki/Benchmark) for a
+[benchmark wiki](https://github.com/frbrno/colfer/wiki/Benchmark) for a
 comparison. Suboptimal performance is treated like a bug.

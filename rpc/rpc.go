@@ -6,7 +6,7 @@ import (
 	"io"
 	"net/rpc"
 
-	"github.com/pascaldekloe/colfer/rpc/internal"
+	"github.com/frbrno/colfer/rpc/internal"
 )
 
 // colferer covers the encoding methods.

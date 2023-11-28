@@ -10,7 +10,7 @@ Colfer.go: ../testdata/test.colf ../testdata/test-go.tags ../*.go ../template/*.
 	rmdir gen
 
 breaktest: ../testdata/break*.colf ../*.go ../template/*.txt ../cmd/colf/*.go
-	$(COLF) -p github.com/pascaldekloe/colfer/go/$@ go ../testdata/break*.colf
+	$(COLF) -p github.com/frbrno/colfer/go/$@ go ../testdata/break*.colf
 	$(GO) build ./$@/...
 	touch $@
 
