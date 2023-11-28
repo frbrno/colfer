@@ -1,5 +1,9 @@
 # Colfer
 
+### install 
+
+`go install github.com/frbrno/colfer/cmd/colf`
+
 Colfer is a binary serialization [format](https://github.com/frbrno/colfer/wiki/Spec)
 optimized for speed and size.
 
