@@ -27,7 +27,7 @@ type Repo struct{
 }
 
 {{range .Structs}}
-func (r *Repo) Get{{.NameNative}}(key string) (*{{.NameNative}}, error) {
+func (r *Repo) {{.NameNative}}Get(key string) (*{{.NameNative}}, error) {
 	var err error
 	s := new({{.NameNative}})
 
@@ -49,7 +49,38 @@ func (r *Repo) Get{{.NameNative}}(key string) (*{{.NameNative}}, error) {
 	return s, err
 }
 
-func (r *Repo) GetList{{.NameNative}}(ascend bool) ([]*{{.NameNative}}, error) {
+func (r *Repo) {{.NameNative}}Delete(key string) error {
+    return r.db.Update(func(tx *buntdb.Tx) error {
+        key_db := "{{.NameNative}}_list:" + key
+        _,err:=tx.Delete(key_db)
+        if err==buntdb.ErrNotFound{
+            return nil
+        }
+        return err
+    })
+}
+
+func (r *Repo) {{.NameNative}}DeleteAll() error {
+return r.db.Update(func(tx *buntdb.Tx) error {
+		var delkeys []string
+		err := tx.AscendKeys("{{.NameNative}}:*", func(k, v string) bool {
+			delkeys = append(delkeys, k)
+			return true // continue
+		})
+		if err != nil {
+			return err
+		}
+
+		for _, k := range delkeys {
+			if _, err = tx.Delete(k); err != nil && err != buntdb.ErrNotFound {
+				return err
+			}
+		}
+		return nil
+	})
+}
+
+func (r *Repo) {{.NameNative}}GetList(ascend bool) ([]*{{.NameNative}}, error) {
 	var err error
 	var err_unmarshal error
 	list := make([]*{{.NameNative}}, 0)
@@ -90,7 +121,7 @@ func (r *Repo) GetList{{.NameNative}}(ascend bool) ([]*{{.NameNative}}, error) {
 	return list, err
 }
 
-func (r *Repo) Update{{.NameNative}}(key string, fn_update func(channel *{{.NameNative}}, exists bool) (do_update bool)) error {
+func (r *Repo) {{.NameNative}}Update(key string, fn_update func(channel *{{.NameNative}}, exists bool) error) error {
 	return r.db.Update(func(tx *buntdb.Tx) error {
 		key_db := "{{.NameNative}}_list:" + key
 		value, exists, err := get(tx, key_db)
@@ -105,9 +136,9 @@ func (r *Repo) Update{{.NameNative}}(key string, fn_update func(channel *{{.Name
 			}
 		}
         s.Key = key
-		do_update := fn_update(s, exists)
-		if !do_update {
-			return nil
+		err = fn_update(s, exists)
+		if err != nil {
+			return err
 		}
 
         if exists && s.Key != key {
@@ -131,7 +162,6 @@ func (r *Repo) Update{{.NameNative}}(key string, fn_update func(channel *{{.Name
 	})
 }
 {{end}}
-
 
 func get(tx *buntdb.Tx, key_db string) (value string, exists bool, err error) {
 
