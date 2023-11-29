@@ -49,6 +49,19 @@ func (r *Repo) {{.NameNative}}Get(key string) (*{{.NameNative}}, error) {
 	return s, err
 }
 
+func (r *Repo) {{.NameNative}}Set(key string, value *{{.NameNative}}, opts *buntdb.SetOptions) error {
+    return r.db.Update(func(tx *buntdb.Tx) error {
+		b, err := value.MarshalBinary()
+		if err != nil {
+			return err
+		}
+
+        key_db := "{{.NameNative}}_list:" + key
+        _, err := tx.Set(key_db, b, opts)
+        return err
+    })
+}
+
 func (r *Repo) {{.NameNative}}Delete(key string) error {
     return r.db.Update(func(tx *buntdb.Tx) error {
         key_db := "{{.NameNative}}_list:" + key
