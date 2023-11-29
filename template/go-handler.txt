@@ -57,7 +57,7 @@ func (r *Repo) {{.NameNative}}Set(key string, value *{{.NameNative}}, opts *bunt
 		}
 
         key_db := "{{.NameNative}}_list:" + key
-        _, err := tx.Set(key_db, b, opts)
+        _, err = tx.Set(key_db, b, opts)
         return err
     })
 }
