@@ -42,6 +42,7 @@ func (r *Repo) {{.NameNative}}Get(key string) (*{{.NameNative}}, error) {
 			if err != nil {
 				return err
 			}
+			return nil
 		}
 		return buntdb.ErrNotFound
 	})
